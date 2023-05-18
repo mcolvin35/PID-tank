@@ -20,7 +20,7 @@ while True:
         lcm=Lsens.distance
         rcm=Rsens.distance
 
-        if lcm < 15:
+        if rcm > 15 and lcm < 15:
             L1.duty_cycle=65000
             L2.duty_cycle=0
 
@@ -28,7 +28,7 @@ while True:
             R2.duty_cycle=65000
             print("turn left")
 
-        if rcm < 15:
+        if lcm > 15 and rcm < 15:
             L1.duty_cycle=0
             L2.duty_cycle=65000
 
