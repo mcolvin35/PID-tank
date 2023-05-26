@@ -4,7 +4,7 @@ from pwmio import PWMOut
 import adafruit_hcsr04
 import time 
 
-pid = PID(1, 0.1, 0.05, setpoint=15, output_limits=(0, 65535))
+pid = PID(1000, 100, 50, setpoint=15, output_limits=(0, 65535))
 dis=0
 
 
@@ -24,10 +24,11 @@ while True:
         dis = ((Lsens.distance+Rsens.distance)/2.0)
         control = pid(dis)
         motor=int(control)
+        p,i,d = pid.components
 
-        print("DISTANCE:", dis)
-        print("MOTOR:",motor)
-
+        print("DISTANCE:", dis,"\t", p,i,d, "\t MOTOR:", control) 
+        #print("\t", pid.proportional, pid.integral, pid.derivative)
+        
         # lcm=Lsens.distance
         # rcm=Rsens.distance
 
