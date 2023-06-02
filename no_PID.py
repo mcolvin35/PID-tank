@@ -1,4 +1,3 @@
-from digitalio import DigitalInOut, Direction
 import board
 from pwmio import PWMOut
 import adafruit_hcsr04
