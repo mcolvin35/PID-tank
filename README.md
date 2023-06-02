@@ -10,9 +10,12 @@
 ### **Brainstorming**
 My original idea for this project was to make a tank that followed an object forwards and backwards with PID. I ended up making it turn to follow an object as well, but honestly, I wanted to do the double sensor design because I thought it would look cool, and then I decided to use both sensors to detect objects from the side after that.
 
-<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/sketch.JPG?raw=true" width="500">
+
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/sketch.JPG?raw=true" width="500"> 
+
 
 Here's the original sketch for my design!
+
 
 <img src="https://github.com/mcolvin35/PID-project/blob/master/images/PID%20idea.png?raw=true" width="300">
 
@@ -40,6 +43,16 @@ And here's a "more refined" version I made later
 * 4 #1-72 hex nuts
 
 ## **Design**
+[Here's a link to the Onshape document](https://cvilleschools.onshape.com/documents/8fae5fdf447fbfb9d54d9470/w/7d247cc5ccc396c5e0c210bc/e/ef00bd4d61704b1228024abc?renderMode=0&uiState=6479561290e9b5185ed82d96)
+
+<p align="center">
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/isometric.png?raw=true" width="1000">
+
+<p align="left">
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/front.png?raw=true" width="375"><img src="https://github.com/mcolvin35/PID-tank/blob/master/images/side.png?raw=true" width="375">
+
+
+
 
 
 ## **Assembly**
