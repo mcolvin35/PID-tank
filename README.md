@@ -72,7 +72,7 @@ This was the first time it drove on its own. I had just wired up the battery pac
 At this point, the assembly is pretty much complete. This was after wiring up the sensors and writing some simple code to make it follow my hand. It doesn't go backwards very smoothly because of some errors in the code that I had to fix.
 
 ### **Wiring Diagram**
-<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/wiring_diagram.png?raw=true" width="1000"> 
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/wiringdiagramv2.png?raw=true" width="1000"> 
 
 ## **Code**
 I ended up having two different versions of the code. One version had no PID but could turn and follow objects, the other had PID but could only got forwards and backwards. I wish I could've done more with the PID version but sadly I ran out of time. 
