@@ -8,7 +8,7 @@
 
 ## **Planning**
 ### **Brainstorming**
-My original idea for this project was to make a tank that followed an object forwards and backwards with PID. I ended up making it turn to follow an object as well, but honestly, I wanted to do the double sensor design because I thought it would look cool, and then I decided to use both sensors to detect objects from the side after that.
+My original idea for this project was to make a tank that followed an object forwards and backwards with PID. Eventually, that idea evolved into also having it turn to follow an object using two ultrasonic sensors angled away from each other. 
 
 
 <img src="https://github.com/mcolvin35/PID-tank/blob/master/images/sketch.JPG?raw=true" width="500"> 
@@ -54,12 +54,153 @@ And here's a "more refined" version I made later
 <p align="left">
 <img src="https://github.com/mcolvin35/PID-tank/blob/master/images/back.png?raw=true" width="375"><img src="https://github.com/mcolvin35/PID-tank/blob/master/images/top.png?raw=true" width="375">
 
-
-
-
-
 ## **Assembly**
 
-## **Code**
+### **First motor test**
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/tread_test.gif?raw=true" width="400"> 
 
+This was just a simple test to see if my treads were working after I got the wheels on. It kind of worked but the treads were a little loose and the teeth on the treads were skipping so I made the wheels and the empty space between the wheel teeth bigger. 
+
+### **First drive test**
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/drive_test.gif?raw=true" width="400"> 
+
+This was the first time it drove on its own. I had just wired up the battery pack and gotten the board in place. The reason it goes slightly to the left is because the left wheels are the newer version while the right wheels are still the old version. That's also why the tread comes off at the end.
+
+### **Sensor test**
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/noPID_v1.gif?raw=true" width="400"> 
+
+At this point, the assembly is pretty much complete. This was after wiring up the sensors and writing some simple code to make it follow my hand. It doesn't go backwards very smoothly because of some errors in the code that I had to fix.
+
+### **Wiring Diagram**
+
+## **Code**
+I ended up having two different versions of the code. One version had no PID but could turn and follow objects, the other had PID but could only got forwards and backwards. I wish I could've done more with the PID version but sadly I ran out of time. 
+
+### **Non-PID**
+```python 
+import board
+from pwmio import PWMOut
+import adafruit_hcsr04
+import time 
+
+#assigning pins to motors
+L1 = PWMOut(board.D2)
+L2 = PWMOut(board.D3)
+
+R1 = PWMOut(board.D8)
+R2 = PWMOut(board.D9)
+
+#assigning pins to sensors
+Lsens = adafruit_hcsr04.HCSR04(trigger_pin=board.A4, echo_pin=board.A5)
+Rsens = adafruit_hcsr04.HCSR04(trigger_pin=board.A0, echo_pin=board.A1)
+
+
+
+while True: 
+    try:
+        #creating variables to use sensor values
+        lcm=Lsens.distance
+        rcm=Rsens.distance
+
+        if rcm > 15 and lcm < 15: #if object is closer to left sensor
+            L1.duty_cycle=65000 
+            L2.duty_cycle=0 #left motor backwards
+
+            R1.duty_cycle=0 #right motor forwards
+            R2.duty_cycle=65000 
+            print("turn left")
+
+        if lcm > 15 and rcm < 15: #if object is closer to right sensor
+            L1.duty_cycle=0 #left motor forwards
+            L2.duty_cycle=65000 
+
+            R1.duty_cycle=65000
+            R2.duty_cycle=0 #right motor backwards
+            print("turn right")
+
+        if lcm > 15 and rcm > 15: #if object is farther than 15cm away
+            L1.duty_cycle=0 #left motor forwards
+            L2.duty_cycle=65000
+            
+            R1.duty_cycle=0 #right motor forwards
+            R2.duty_cycle=65000
+            print("forward")
+
+        if lcm < 15 and rcm < 15: #if object is closer than 15cm
+            L1.duty_cycle=65000
+            L2.duty_cycle=0 #left motor backwards
+
+            R1.duty_cycle=65000
+            R2.duty_cycle=0 #right motor backwards
+            print("backward")
+    except RuntimeError:
+        print("retrying!")
+        time.sleep(0.1)
+
+```
+### **PID**
+```python
+from PID_CPY import PID 
+import board
+from pwmio import PWMOut
+import adafruit_hcsr04
+
+pid = PID(10, 0, 1, setpoint=15, output_limits=(-65535, 65535)) #pid tuning
+dis=0
+
+#assigning pins to motors
+L1 = PWMOut(board.D2)
+L2 = PWMOut(board.D3)
+
+R1 = PWMOut(board.D8)
+R2 = PWMOut(board.D9)
+
+#assigning pins to sensors
+Lsens = adafruit_hcsr04.HCSR04(trigger_pin=board.A4, echo_pin=board.A5)
+Rsens = adafruit_hcsr04.HCSR04(trigger_pin=board.A0, echo_pin=board.A1)
+
+
+
+while True: 
+    try:
+        dis = ((Lsens.distance+Rsens.distance)/2.0) #average distance between sensors
+        control = pid(dis) #pid calculation 
+        p,i,d = pid.components
+
+        print("DISTANCE:", dis,"\t", p,i,d, "\t MOTOR:", control) #distance, pid, and pid output
+        
+        lcm=Lsens.distance
+        rcm=Rsens.distance
+
+        if control < 0: #if pid output is less than 0
+            L1.duty_cycle=abs(int(control)) #left motor forwards absolute value of control (absolute value and int bc duty_cycle doesnt take negative numbers or decimals) 
+            L2.duty_cycle=65535
+
+            R1.duty_cycle=abs(int(control)) #right motor forwards
+            R2.duty_cycle=65535
+
+        if control > 0: #if pid output is greater than 0
+            L1.duty_cycle=65535
+            L2.duty_cycle=int(control)
+
+            R1.duty_cycle=65535
+            R2.duty_cycle=int(control)
+    except RuntimeError:
+        print("Retrying!")
+```
 ## **Final Product**
+So here is the "final" product! 
+### **Non-PID**
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/noPID_final.gif?raw=true" width="400"> 
+
+You can see how this version moves backwards much faster than the other one. 
+
+### **PID**
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/PID_final.gif?raw=true" width="400"> 
+
+And here's the sort of unfinished PID version. This one doesn't move forwards very well. You can't see it in the GIF but it does still to tend to oscillate a bit when it's trying to stand still. 
+
+### **Reflection**
+Overall, I'm really happy with how this project turned out! I do wish I could've had more time to work on tuning and troubleshooting the PID version, and also to clean up the aesthetics a bit, like color coding jumper wires, using shorter wires where I can, and tucking away some of the wires from the motors. I think I spent too much time focusing on the non-PID version and because of that I only had a few days to get the PID version set up. That being said, the non-PID version does work way better than I ever expected it to and I'm really happy about that! I'd say other than the time constraint, this whole project went pretty smoothly without any major hitches that held me back for a long time.
+
+## **Thanks!**
