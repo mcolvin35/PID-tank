@@ -8,8 +8,13 @@
 
 ## **Planning**
 ### **Brainstorming**
-My original idea for this project was to make a tank that followed an object forwards and backwards with PID. Eventually, that idea evolved into also having it turn to follow an object using two ultrasonic sensors angled away from each other. 
+The original inspiration for this project was Mr. Dierolf's PID car. 
 
+<img src="https://github.com/mcolvin35/PID-tank/blob/master/images/dierolf_car.JPG?raw=true" width="400"> 
+
+However, I didn't want to make a project that somebody else had already done so I decided to make it use tank treads instead of wheels to drive around. 
+
+The thing about tank treads is that it's really easy to turn with them. You just have to make the treads spin in opposite directions and it doesn't require any extra mechanics as opposed to with a car. That gave me the idea to make a tank that follows an object with a set of two ultrasonic sensors, which is also very similar to an idea I had for a project last year that I ended up not using.
 
 <img src="https://github.com/mcolvin35/PID-tank/blob/master/images/sketch.JPG?raw=true" width="500"> 
 
